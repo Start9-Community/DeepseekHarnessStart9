@@ -20,7 +20,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 - Author metadata: **Pau Font Martínez**, contact `contacte@pau.fm`,
   support site now points to the contact address; PayPal donation link
   updated to the account associated with `paufont@gmail.com`.
-- *(0.0.4.1 correction)* Contact email corrected to **xontacte@paufont.cat**
+- *(0.0.4.1 correction)* Contact email corrected to **contacte@paufont.cat**
   (site paufont.cat).
 
 ## [0.0.3] — 2026-08-22

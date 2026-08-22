@@ -1,7 +1,7 @@
 # DeepSeek Harness — Manual d'ús (català)
 
 Guia ràpida per al servei **DeepSeek Harness** a StartOS.
-Autor: **Pau Font Martínez** — contacte: **xontacte@paufont.cat** — Donacions: [PayPal (paufont@gmail.com)](https://www.paypal.com/paypalme/pfont)
+Autor: **Pau Font Martínez** — contacte: **contacte@paufont.cat** — Donacions: [PayPal (paufont@gmail.com)](https://www.paypal.com/paypalme/pfont)
 
 ---
 
@@ -70,7 +70,7 @@ Un cop iniciada la sessió, l'agent pot executar ordres administratives de `star
 ## 7. Crèdits i suport
 
 - **Autor**: Pau Font Martínez
-- **Contacte**: xontacte@paufont.cat
+- **Contacte**: contacte@paufont.cat
 - **X**: [@pfont_](https://x.com/pfont_)
 - **Donacions**: [PayPal](https://www.paypal.com/paypalme/pfont) (compte associat a paufont@gmail.com)
 - **Codi**: [github.com/bytedevil/DeepseekHarnessStart9](https://github.com/bytedevil/DeepseekHarnessStart9)
