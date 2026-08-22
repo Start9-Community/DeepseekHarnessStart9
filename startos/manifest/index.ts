@@ -8,8 +8,8 @@ export const manifest = setupManifest({
   author: 'Pau Font Martínez',
   packageRepo: 'https://github.com/bytedevil/DeepseekHarnessStart9',
   upstreamRepo: 'https://github.com/bytedevil/DeepseekHarnessStart9',
-  supportSite: 'mailto:contacte@pau.fm',
-  marketingUrl: 'https://pau.fm',
+  supportSite: 'mailto:xontacte@paufont.cat',
+  marketingUrl: 'https://paufont.cat',
   donationUrl:
     'https://www.paypal.com/paypalme/pfont?locale.x=ca_ES&email=paufont%40gmail.com',
   description: { short, long },
