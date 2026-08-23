@@ -3,7 +3,8 @@ name: Build s9pk
 on:
   push:
     branches: [main]
-    tags: ['v*']
+    # StartOS git tag convention: v{version}_{revision} (e.g. v0.0.4_0)
+    tags: ['v*_?*', 'v*']
   pull_request:
   workflow_dispatch:
 
