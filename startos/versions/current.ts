@@ -1,18 +1,18 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.0.4:0',
+  version: '0.0.5:0',
   releaseNotes: {
     en_US:
-      'New System Administration action: sign in to StartOS with the master password and administer the whole server from this service. Author contact and PayPal donations updated.',
+      'Fixed "Failed to load history" for older sessions: the web UI now migrates sessions stored under previous workspace roots into the current one at startup.',
     es_ES:
-      'Nueva acción de Administración del sistema: inicia sesión en StartOS con la contraseña maestra y administra todo el servidor desde este servicio. Contacto del autor y donaciones PayPal actualizados.',
+      'Corregido «Failed to load history» en sesiones antiguas: la interfaz migra al arranque las sesiones guardadas bajo raíces de workspace anteriores.',
     de_DE:
-      'Neue Aktion „Systemverwaltung": Melde dich mit dem Masterpasswort bei StartOS an und verwalte den gesamten Server über diesen Dienst. Autorenkontakt und PayPal-Spenden aktualisiert.',
+      '„Failed to load history" für ältere Sitzungen behoben: Die Weboberfläche migriert beim Start Sitzungen aus früheren Workspace-Roots.',
     pl_PL:
-      'Nowa akcja Administracja systemem: zaloguj się do StartOS hasłem głównym i zarządzaj całym serwerem z tej usługi. Zaktualizowano kontakt autora i darowizny PayPal.',
+      'Naprawiono „Failed to load history" dla starszych sesji: interfejs przy starcie migruje sesje z poprzednich katalogów roboczych.',
     fr_FR:
-      "Nouvelle action Administration système : connectez-vous à StartOS avec le mot de passe maître et administrez tout le serveur depuis ce service. Contact de l'auteur et dons PayPal mis à jour.",
+      'Correction de « Failed to load history » pour les anciennes sessions : l’interface migre au démarrage les sessions issues d’espaces de travail antérieurs.',
   },
   migrations: {
     up: async ({ effects }) => {},

@@ -5,6 +5,18 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 [ExVer](https://github.com/Start9Labs/start-os/blob/master/shared-libs/crates/start-core/src/s9pk/v2/manifest.rs)
 (`X.Y.Z:N` — package version : spec version).
 
+## [0.0.5] — 2026-08-22
+
+### Fixed
+- **"Failed to load history: Failed to fetch (internal)"** when opening older
+  chat sessions. dsh groups stored sessions by an encoded project key derived
+  from the workspace root they were created in (`--data-projects--`,
+  `--root--`, …). Sessions saved before the workspace moved to `/data/projects`
+  sat under their old group and their history reads failed with an opaque
+  internal error. The web UI supervisor now migrates every legacy session
+  group into the current workspace's group at startup (verified locally), so
+  old conversations load again.
+
 ## [0.0.4] — 2026-08-22
 
 ### Added
@@ -85,7 +97,8 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 - CI (GitHub Actions): universal `.s9pk` builds (x86_64 + aarch64) on push and
   tag releases using buildx docker-container driver per Start9's own recipe.
 
-[0.0.4]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.4
+[0.0.5]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.5_0
+[0.0.4]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.4_0
 [0.0.3]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.3
 [0.0.2]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.2
 [0.0.1]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.1
