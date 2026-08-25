@@ -1,18 +1,18 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.0.5:0',
+  version: '0.0.5.1:0',
   releaseNotes: {
     en_US:
-      'Fixed "Failed to load history" for older sessions: the web UI now migrates sessions stored under previous workspace roots into the current one at startup.',
+      'Fixed web UI crash loop: session artifacts left flat by the 0.0.5 migration are now healed into the proper per-session layout at startup.',
     es_ES:
-      'Corregido «Failed to load history» en sesiones antiguas: la interfaz migra al arranque las sesiones guardadas bajo raíces de workspace anteriores.',
+      'Corregido el bucle de fallos de la interfaz web: los artefactos de sesión planos de la migración 0.0.5 ahora se reparan al arrancar con la estructura correcta por sesión.',
     de_DE:
-      '„Failed to load history" für ältere Sitzungen behoben: Die Weboberfläche migriert beim Start Sitzungen aus früheren Workspace-Roots.',
+      'Absturzschleife der Weboberfläche behoben: Flache Sitzungsartefakte aus der 0.0.5-Migration werden beim Start in das richtige Sitzungslayout überführt.',
     pl_PL:
-      'Naprawiono „Failed to load history" dla starszych sesji: interfejs przy starcie migruje sesje z poprzednich katalogów roboczych.',
+      'Naprawiono pętlę awarii interfejsu WWW: płaskie artefakty sesji z migracji 0.0.5 są teraz naprawiane przy starcie do właściwego układu.',
     fr_FR:
-      'Correction de « Failed to load history » pour les anciennes sessions : l’interface migre au démarrage les sessions issues d’espaces de travail antérieurs.',
+      'Boucle de crash de l’interface web corrigée : les artefacts de session plats issus de la migration 0.0.5 sont réparés au démarrage dans le bon layout.',
   },
   migrations: {
     up: async ({ effects }) => {},

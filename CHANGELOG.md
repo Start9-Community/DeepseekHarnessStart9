@@ -5,6 +5,21 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 [ExVer](https://github.com/Start9Labs/start-os/blob/master/shared-libs/crates/start-core/src/s9pk/v2/manifest.rs)
 (`X.Y.Z:N` — package version : spec version).
 
+## [0.0.5.1] — 2026-08-25
+
+### Fixed
+- **Web UI crash loop** introduced by the 0.0.5 session migration: that
+  migration moved legacy session groups but landed artifacts *flat* inside the
+  project group (`sessions/--data-projects--/session.jsonl[.zstd]` without a
+  per-session directory), which dsh refuses to load ("unsupported flat-file
+  layout") — the webui daemon crashed on every boot, each restart also hitting
+  `EADDRINUSE` on :4201 while the old proxy lingered. The startup repair now:
+  - extracts each flat artifact's session id from its transcript header and
+    moves it into `<projectKey>/<sessionId>/` (the layout dsh expects)
+  - quarantines unreadable artifacts to `$DSH_HOME/quarantine` so a corrupt
+    file can never block the boot again
+  - `zstd` added to the image to decompress compressed transcripts
+
 ## [0.0.5] — 2026-08-22
 
 ### Fixed
@@ -97,6 +112,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 - CI (GitHub Actions): universal `.s9pk` builds (x86_64 + aarch64) on push and
   tag releases using buildx docker-container driver per Start9's own recipe.
 
+[0.0.5.1]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.5.1_0
 [0.0.5]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.5_0
 [0.0.4]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.4_0
 [0.0.3]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.3
