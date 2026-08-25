@@ -2,7 +2,7 @@ FROM node:22-slim
 
 # Python for the native-API agent harness
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends python3 python3-pip ca-certificates bubblewrap \
+    && apt-get install -y --no-install-recommends python3 python3-pip ca-certificates bubblewrap zstd \
     && rm -rf /var/lib/apt/lists/*
 
 # DeepSeek Harness CLI (provides the `dsh web` browser UI).
