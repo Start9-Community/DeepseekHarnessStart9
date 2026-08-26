@@ -1,18 +1,18 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.0.5.1:0',
+  version: '0.0.5.2:0',
   releaseNotes: {
     en_US:
-      'Fixed web UI crash loop: session artifacts left flat by the 0.0.5 migration are now healed into the proper per-session layout at startup.',
+      'Web UI crash loop fixed for good: sessions are now realigned to the group and id their own header declares (undoing the previous migrations that caused "corrupt session log" boot failures).',
     es_ES:
-      'Corregido el bucle de fallos de la interfaz web: los artefactos de sesión planos de la migración 0.0.5 ahora se reparan al arrancar con la estructura correcta por sesión.',
+      'Bucle de fallos de la interfaz web corregido definitivamente: las sesiones se realinean al grupo e id que declara su propia cabecera (deshaciendo las migraciones previas que causaban errores de arranque "corrupt session log").',
     de_DE:
-      'Absturzschleife der Weboberfläche behoben: Flache Sitzungsartefakte aus der 0.0.5-Migration werden beim Start in das richtige Sitzungslayout überführt.',
+      'Absturzschleife der Weboberfläche endgültig behoben: Sitzungen werden jetzt anhand ihrer eigenen Kopfzeile der richtigen Gruppe und ID zugeordnet (macht die früheren Migrationen rückgängig, die „corrupt session log"-Bootfehler verursachten).',
     pl_PL:
-      'Naprawiono pętlę awarii interfejsu WWW: płaskie artefakty sesji z migracji 0.0.5 są teraz naprawiane przy starcie do właściwego układu.',
+      'Pętla awarii interfejsu WWW naprawiona na dobre: sesje są teraz wyrównywane do grupy i identyfikatora zadeklarowanych w ich własnym nagłówku (cofa wcześniejsze migracje powodujące błędy „corrupt session log").',
     fr_FR:
-      'Boucle de crash de l’interface web corrigée : les artefacts de session plats issus de la migration 0.0.5 sont réparés au démarrage dans le bon layout.',
+      'Boucle de crash de l’interface web corrigée pour de bon : les sessions sont désormais réalignées sur le groupe et l’id déclarés dans leur propre en-tête (annulant les migrations précédentes qui causaient les erreurs de démarrage « corrupt session log »).',
   },
   migrations: {
     up: async ({ effects }) => {},

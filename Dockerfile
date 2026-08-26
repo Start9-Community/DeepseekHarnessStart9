@@ -60,6 +60,7 @@ RUN pip3 install --no-cache-dir --break-system-packages -r /app/agent/requiremen
 
 COPY agent/harness.py /app/harness.py
 COPY agent/web-proxy.js /app/web-proxy.js
+COPY agent/heal-sessions.js /app/heal-sessions.js
 COPY agent/webui-entrypoint.sh /app/webui-entrypoint.sh
 RUN chmod +x /app/webui-entrypoint.sh
 

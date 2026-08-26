@@ -5,6 +5,26 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 [ExVer](https://github.com/Start9Labs/start-os/blob/master/shared-libs/crates/start-core/src/s9pk/v2/manifest.rs)
 (`X.Y.Z:N` — package version : spec version).
 
+## [0.0.5.2] — 2026-08-26
+
+### Fixed
+- **Web UI crash loop ("corrupt session log")** — definitive fix. dsh
+  validates that each transcript's on-disk location matches its own header
+  (`id` + `cwd`), and the 0.0.5 / 0.0.5.1 migrations moved transcripts
+  without rewriting headers, so dsh refused to boot. A new startup repair
+  (`heal-sessions.js`, Node) now:
+  - reads each session's header with `JSON.parse` (decompressing `.zstd`
+    transcripts via the bundled `zstd` binary)
+  - derives the correct project key from `header.cwd` using the exact
+    algorithm of `@deepseek-ai/dsh-session-persistence-jsonl`
+  - realigns every session directory to `<projectKey>/<sessionId>/`,
+    undoing any previous migration (verified locally against a replica of
+    the failing layout)
+  - quarantines unreadable transcripts so a corrupt file can never block
+    boot again
+- The shell-based repair from 0.0.5.1 (which mis-derived session ids) is
+  removed in favor of the Node script.
+
 ## [0.0.5.1] — 2026-08-25
 
 ### Fixed
@@ -112,6 +132,7 @@ Format follows [Keep a Changelog](https://keepachangelog.com/); versions follow
 - CI (GitHub Actions): universal `.s9pk` builds (x86_64 + aarch64) on push and
   tag releases using buildx docker-container driver per Start9's own recipe.
 
+[0.0.5.2]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.5.2_0
 [0.0.5.1]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.5.1_0
 [0.0.5]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.5_0
 [0.0.4]: https://github.com/bytedevil/DeepseekHarnessStart9/releases/tag/v0.0.4_0

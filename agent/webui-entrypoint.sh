@@ -20,62 +20,12 @@ chmod 775 "$PROJECTS_DIR" 2>/dev/null || true
 cd "$PROJECTS_DIR" || { echo "[webui] cannot cd into $PROJECTS_DIR"; exit 1; }
 
 # ── Session store repair ────────────────────────────────────────────────
-# dsh requires: sessions/<projectKey>/<sessionId>/session.jsonl[.zst]
-# Two failure shapes we heal at startup:
-#  1. Legacy project groups (--root--, --app--, --~XXXX--) from earlier
-#     workspace roots → move whole group under the current key.
-#  2. Flat artifacts directly inside a project group (no per-session dir)
-#     → read the session id from the transcript header and give each file
-#       its own directory; unreadable files go to quarantine so the boot
-#       never blocks.
-repair_sessions() {
-  SESSIONS_DIR="$DSH_HOME_DIR/sessions"
-  CURRENT_KEY="--data-projects--"
-  QUARANTINE="$DSH_HOME_DIR/quarantine"
-  [ -d "$SESSIONS_DIR" ] || return 0
-
-  # 1) legacy project groups -> current workspace key
-  mkdir -p "$SESSIONS_DIR/$CURRENT_KEY"
-  for dir in "$SESSIONS_DIR"/*/; do
-    name="$(basename "$dir")"
-    [ "$name" = "_no-cwd" ] && continue
-    [ "$name" = "$CURRENT_KEY" ] && continue
-    case "$name" in
-      --root--|--app--|--~*|"_no-cwd") ;;
-      *) continue ;;
-    esac
-    echo "[webui] migrating session group '$name' -> '$CURRENT_KEY'"
-    find "$dir" -mindepth 1 -maxdepth 1 -exec mv {} "$SESSIONS_DIR/$CURRENT_KEY/" \; 2>/dev/null
-    rm -rf "$dir"
-  done
-
-  # 2) flatten-heal: any session.* artifact sitting directly inside a
-  #    project group must live under <groupId>/<sessionId>/ instead.
-  for f in "$SESSIONS_DIR"/*/session.*; do
-    [ -f "$f" ] || continue
-    grp="$(dirname "$f")"
-    sid=""
-    case "$f" in
-      *.zst|*.zstd)
-        if command -v zstd >/dev/null 2>&1; then
-          sid="$(zstd -dc "$f" 2>/dev/null | head -c 4096 | grep -oE '"id"[[:space:]]*:[[:space:]]*"[^"]+"' | head -1 | sed 's/.*"id"[[:space:]]*:[[:space:]]*"//; s/"$//')"
-        fi
-        ;;
-      *)
-        sid="$(head -c 4096 "$f" | grep -oE '"id"[[:space:]]*:[[:space:]]*"[^"]+"' | head -1 | sed 's/.*"id"[[:space:]]*:[[:space:]]*"//; s/"$//')"
-        ;;
-    esac
-    if [ -n "$sid" ]; then
-      safe="$(echo "$sid" | tr -c 'A-Za-z0-9._-' '_')"
-      mkdir -p "$grp/$safe"
-      mv "$f" "$grp/$safe/" && echo "[webui] healed flat artifact '$(basename "$f")' -> '$safe/'"
-    else
-      mkdir -p "$QUARANTINE"
-      mv "$f" "$QUARANTINE/" && echo "[webui] quarantined unreadable artifact '$(basename "$f")'"
-    fi
-  done
-}
-repair_sessions
+# dsh requires sessions/<projectKey>/<sessionId>/session.jsonl[.zst] AND
+# validates that each transcript's path matches its own header (id + cwd).
+# heal-sessions.js realigns every session to the group/id its header
+# declares (undoing any legacy migration) and quarantines unreadables so a
+# corrupt file can never block the boot again.
+node /app/heal-sessions.js
 
 # ── trusted hosts ───────────────────────────────────────────────────────
 HOSTNAME_VAL="$(hostname 2>/dev/null || echo server)"
