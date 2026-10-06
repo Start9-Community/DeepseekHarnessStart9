@@ -61,7 +61,7 @@ One volume holds everything: the workspace, the conversations, and the key.
 | ------------------ | ---------------- | ----------------------------------------------------------------- |
 | `/data/projects`   | the agent, users | Workspace root — project folders and every file the agent writes  |
 | `/data/dsh`        | `dsh`            | Its profile home: sessions, settings, and its own credential file |
-| `/data/store.json` | this package     | The API key, the model, and the web interface password            |
+| `/data/store.json` | this package     | The API key and the web interface password                        |
 
 `/data/projects` is the working directory `dsh web` is launched from, which is what makes it the workspace root the interface offers.
 
@@ -98,6 +98,8 @@ That gate covers the TLS addresses only. A binding's plaintext port is a direct 
 Port 4201 is a relay, not the application. `dsh web` accepts only `127.0.0.1` or `0.0.0.0` as a bind address and hard-refuses the latter, and the OS proxy dials the container's bridge address — so `agent/web-proxy.js` listens on 4201 and forwards to loopback, passing headers through untouched (WebSocket upgrades and SSE streams included, which is what makes replies render as they arrive).
 
 Headers pass through because `dsh` fences its own `/api` routes on the `Host` header, and the daemon is launched with a `--trusted-host` for every authority this interface answers to, read from `sdk.host.getOwn` and refreshed when the user enables or disables an address. Rewriting `Host` to the loopback authority would also work and would need no such wiring — but it defeats the fence, which is the package's second line of defence against a hostile page in the user's browser reaching the agent.
+
+An authority missing from that list shows up as HTTP `403` on `/api`, not as a connection error: the page loads and the app is inert. The `webui` subcontainer logs the trusted list at startup (`[webui] starting dsh web on … (trusted: …)`) — check it first.
 
 Outbound, the health check reaches `api.deepseek.com` only. The agent itself is not so bounded: `dsh` ships a web-fetch tool and an MCP client, so a conversation can send it anywhere the container can reach.
 
