@@ -18,29 +18,26 @@ Freshly scaffolded? Work the
 guide page, not a file in this repo — read it, don't copy it in.
 
 Keep `README.md` (technical reference for an AI support or administering agent) and
-`instructions.md` (end-user docs) in sync with your changes.
+`instructions.md` (end-user docs) in sync with your changes. This file restates neither:
+whoever changes the package has both, so it carries only what they don't — repo mechanics,
+a change that looks right and is not, where the next thing gets added, a naming trap, a
+build or test invocation particular to this repo.
 
-**Bugs and feature requests are GitHub issues on this repo** — file them as you find them.
+**Fix a defect you spot rather than reporting it** — you have the package open and the
+context to be sure. File **a GitHub issue on this repo** only when the call isn't yours to
+make: you can't pin the cause down, two defensible fixes exist, or it's too large to ride on
+the work in hand. An open issue is a report, not a queue — implement one when you're asked
+to or when it's labelled `Approved`, then close it with `Closes #<n>`.
+
 Don't record work in the repo instead: no `TODO.md`, no `NOTES.md`, no `PLAN.md`. What you
 verified, tried, and decided belongs in the commit message and the PR body.
 
 ## This repo
 
-- **`dsh` is published only as npm prereleases, and its dependency ranges are carets on those
-  prereleases.** Pinning `@deepseek-ai/dsh` in the `Dockerfile` therefore fixes the CLI shim but not
-  its tree — two builds of the same pin can ship different agent internals. Treat an unexplained
-  behavior change after a rebuild as an upstream drift, not a package regression.
-- **The two platform binaries are installed by hand because `npm install -g` drops
-  `optionalDependencies`.** Their versions are read out of each parent package's own
-  `optionalDependencies` at build time — don't replace that with a hardcoded version, or a `dsh` bump
-  will silently pair the wrong binary with the resolver that looks for it.
-- **`dsh web` takes only `127.0.0.1` or `0.0.0.0` as a bind address and hard-refuses the second**, so
-  `agent/web-proxy.js` is the only reason the OS proxy — which dials the container's bridge address —
-  can reach it at all. Keep the relay header-transparent: `dsh` fences its `/api` routes on `Host`,
-  and `main.ts` feeds it a `--trusted-host` per authority from `sdk.host.getOwn`. Rewriting `Host` to
-  the loopback authority also "works", and silently disables that fence.
-- **A missed authority shows up as HTTP 403 on `/api`, not as a connection error** — the page loads
-  and the app is inert. Check the `--trusted-host` list in the daemon's startup log first.
-- **`dsh` has no authentication of any kind**; the gate is `addSsl.auth` on the binding in
-  `interfaces.ts`, enforced by the OS reverse proxy. It covers the TLS addresses only — a plaintext
-  binding is a direct forward — so never widen the exposure without accounting for that.
+- **Don't hardcode the two platform binaries' versions in the `Dockerfile`.** They are read from
+  each parent package's `optionalDependencies` at build time, so a `dsh` bump can't pair the wrong
+  binary with the resolver that looks for it.
+- **Keep `agent/web-proxy.js` header-transparent; never rewrite `Host` to the loopback authority.**
+  It also "works", and silently disables `dsh`'s `Host` fence on `/api`.
+- **Never expose the interface without the `addSsl.auth` gate in `interfaces.ts`.** `dsh` has no
+  login of its own, and the gate covers the TLS addresses only.
