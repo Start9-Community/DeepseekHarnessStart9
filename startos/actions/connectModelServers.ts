@@ -130,6 +130,7 @@ export const connectModelServers = sdk.Action.withInput(
           masked: false,
           copyable: false,
           qr: false,
+          launchable: false,
         })),
       },
     }
