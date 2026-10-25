@@ -12,8 +12,10 @@ npm view @deepseek-ai/dsh version
 
 The current pin lives in `Dockerfile`, in the `npm install -g @deepseek-ai/dsh@<version>` line.
 
-`dsh` publishes prereleases only, and `npm view` reports the newest one, so the pin is normally a
-release-candidate tag.
+`dsh` publishes prereleases only, and `npm view` reports the `latest` tag, so the pin is normally a
+release-candidate tag. A newer candidate can sit on `next` instead: check
+`npm view @deepseek-ai/dsh dist-tags` as well (0.2.1-rc.3 was on `next` while `latest` was still
+0.2.1-rc.2).
 
 ## Applying the bump
 

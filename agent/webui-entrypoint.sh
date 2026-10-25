@@ -24,7 +24,13 @@ cd "$PROJECTS_DIR" || { echo "[webui] cannot cd into $PROJECTS_DIR"; exit 1; }
 # provider routes (startos-*) in the profile patch the Models page edits. The
 # profile is created on dsh's first boot; --dump-config creates it without
 # serving. The routes carry no keys: those arrive as STARTOS_*_API_KEY env.
-PATCH_FILE="${DSH_HOME:-/data/dsh}/profiles/web/cordis.patch.yml"
+# dsh resolves its home from $DSH_HOME and falls back to ~/.dsh, so the default
+# has to be exported too: without it dsh would write the profile under $HOME
+# while this script looked for it in /data/dsh, and every route would be lost
+# with only a warning in the log.
+DSH_HOME="${DSH_HOME:-/data/dsh}"
+export DSH_HOME
+PATCH_FILE="$DSH_HOME/profiles/web/cordis.patch.yml"
 [ -f "$PATCH_FILE" ] || dsh web --dump-config > /dev/null 2>&1
 node /app/startos-providers.mjs "$PATCH_FILE" \
   || echo "[webui] could not add the StartOS model servers to dsh's providers"
