@@ -45,8 +45,9 @@ verified, tried, and decided belongs in the commit message and the PR body.
 - **Never rewrite `Host` (or `Origin`) in `agent/web-proxy.js`.** Pointing it at loopback also
   "works", and silently disables `dsh`'s `Host` fence on `/api`. The relay's only header edits are
   dropping `accept-encoding` on page requests and the auth cookie's `SameSite`.
-- **Never expose the interface without the `addSsl.auth` gate in `interfaces.ts`.** `dsh` has no
+- **Never expose the interface without the `proxy.auth` gate in `interfaces.ts`.** `dsh` has no
   login of its own.
+- **Seed `session-log-deepseek` only when its row has no `enabled` key.** Writing it on every start would undo a user who opted in, and a `--patch` overlay would lock the Settings switch.
 - **Keep the `startos-*` provider routes in the user's `cordis.patch.yml`; don't move them to a
   `--patch` overlay or a second `dsh-llm-pi-ai` entry.** The overlay locks the Models page and the
   second entry fails to load (README, Dependencies).

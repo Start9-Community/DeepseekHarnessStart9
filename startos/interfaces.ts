@@ -13,7 +13,7 @@ export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
   const origin = await multi.bindPort(proxyPort, {
     protocol: 'http',
     preferredExternalPort: proxyPort,
-    addSsl: password
+    proxy: password
       ? {
           auth: {
             type: 'basic',

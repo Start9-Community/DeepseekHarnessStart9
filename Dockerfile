@@ -9,7 +9,7 @@ RUN apt-get update \
 # tools, and sharp for image input. Fail the build if any is missing rather
 # than ship an agent whose tools break at first use.
 RUN set -eux; \
-    npm install -g @deepseek-ai/dsh@0.2.1-rc.5; \
+    npm install -g @deepseek-ai/dsh@0.2.2-rc.1; \
     cd "$(npm root -g)/@deepseek-ai/dsh/node_modules"; \
     node --input-type=module -e "await import('@deepseek-ai/node-addon-system/landlock-run'); await import('@deepseek-ai/node-addon-system/flock')"; \
     node -e "require('sharp')"; \

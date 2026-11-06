@@ -101,6 +101,10 @@ Every route pins `compat` to `max_tokens`, a `system` role, and no `store` field
 
 The managed routes cannot live anywhere other than the user's patch. A `--patch` overlay on `llm-pi-ai` replaces that entry's whole config. That hides the user's providers and makes the Models page refuse every save ("overridden by a home patch or command-line overlay"). A second `dsh-llm-pi-ai` entry fails to load, because each instance claims every catalog provider.
 
+## Session Log Upload
+
+`dsh` can attach session logs to requests it sends to the official DeepSeek API (the `dsh_session_log` field, from the `session-log-deepseek` plugin, on by default upstream). This package turns it off: before `dsh` starts, `agent/startos-providers.mjs` writes `enabled: false` to that plugin's row in `cordis.patch.yml` when the row has no `enabled` key. The **Upload Session Log when using the official model API** switch in **Settings → General** writes the same key, so a user's choice stays in place across restarts and updates. It has no effect on requests to other providers.
+
 ## Network Access and Interfaces
 
 One interface, serving the agent's browser UI behind an authentication gate.
@@ -111,9 +115,9 @@ One interface, serving the agent's browser UI behind an authentication gate.
 
 The port is bound on the `webui` MultiHost and is not masked.
 
-**Authentication is enforced by the OS reverse proxy, not by the service.** `dsh` has no login of its own — its webserver takes a host and a port and nothing else — so the binding sets `addSsl.auth` to HTTP basic with username `admin` and the password from `store.json`. Requests that fail the check get `401` at the edge and never reach the container. The credential is read reactively in `setupInterfaces`, so **Set Web Interface Password** takes effect without a restart.
+**Authentication is enforced by the OS reverse proxy, not by the service.** `dsh` has no login of its own — its webserver takes a host and a port and nothing else — so the binding sets `proxy.auth` to HTTP basic with username `admin` and the password from `store.json`. Requests that fail the check get `401` at the edge and never reach the container. The credential is read reactively in `setupInterfaces`, so **Set Web Interface Password** takes effect without a restart.
 
-That gate covers the TLS addresses only. A binding's plaintext port is a direct forward with no listener of StartOS's in front of it, so if a user enables the plain-HTTP address they reach the agent unauthenticated. Prefer the HTTPS address, and treat enabling the other one as publishing an open shell.
+The gate covers both the plain-HTTP and HTTPS addresses. Prefer HTTPS: HTTP basic auth does not encrypt the credential, and a plaintext connection also exposes the conversation and workspace traffic to anyone able to observe it.
 
 Port 4201 is a relay, not the application. `dsh web` accepts only `127.0.0.1` or `0.0.0.0` as a bind address and hard-refuses the latter, and the OS proxy dials the container's bridge address — so `agent/web-proxy.js` listens on 4201 and forwards to loopback, passing request headers through untouched apart from the sign-in and page handling below (WebSocket upgrades and SSE streams included, which is what makes replies render as they arrive).
 
@@ -203,7 +207,7 @@ A restored instance is immediately usable: providers and keys come back with it.
 
 ## Limitations and Differences
 
-1. **Authentication is at the edge, and only on the TLS addresses.** Upstream has no login at all; the OS reverse proxy supplies one. A binding's plaintext port bypasses that gate by design — it is a direct forward with no listener in front — so enabling the plain-HTTP address exposes the agent, and its shell, to anyone who can reach it.
+1. **Authentication is at the edge, on both HTTP and HTTPS addresses.** The OS reverse proxy checks the password before forwarding requests to the relay. Plain HTTP still exposes the credential and session traffic to network observers; use HTTPS.
 2. **The agent's shell is confined to the container, not to the workspace.** `bubblewrap` and `landlock-run` are present and probe as fully functional, but the container is the boundary — all of `/data`, including the model keys and every stored conversation, is reachable from a command the agent runs.
 3. **Pinning the image does not pin the agent.** Upstream ships prereleases whose own dependencies are caret ranges, so rebuilding this repository unchanged can produce an image with different agent internals.
 4. **The `startos-*` routes are read-only in practice.** The Models page can edit or delete them, but the next start rewrites them from `store.json`. Their model lists are fixed at the last **Connect Model Servers** run.

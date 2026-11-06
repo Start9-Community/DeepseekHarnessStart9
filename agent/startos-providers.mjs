@@ -10,12 +10,18 @@
 // under the route's apiKeyEnv, and dsh resolves that file before the process
 // environment, so a stale copy would shadow the key main.ts injects forever.
 //
+// dsh uploads session logs with official DeepSeek API requests unless told not
+// to. A profile with no explicit choice gets `enabled: false`; the Settings
+// switch writes `enabled` to the same row, so a user's choice is kept.
+//
 // Usage: node startos-providers.mjs <path to cordis.patch.yml> [<path to .credentials.yaml>]
 import { existsSync, readFileSync, renameSync, writeFileSync } from 'node:fs'
 import { isMap, isScalar, isSeq, parseDocument } from 'yaml'
 
 const ENTRY_ID = 'llm-pi-ai'
 const ENTRY_NAME = '@deepseek-ai/dsh-llm-pi-ai'
+const SESSION_LOG_ID = 'session-log-deepseek'
+const SESSION_LOG_NAME = '@deepseek-ai/dsh-session-log-deepseek'
 const PREFIX = 'startos-'
 
 const path = process.argv[2]
@@ -80,14 +86,30 @@ if (!isSeq(doc.contents)) throw new Error(`${path} is not a YAML sequence`)
 // dsh seeds the file as `[]`; write rows in block style, as dsh's editor does.
 doc.contents.flow = false
 
-// The row dsh's config editor writes this entry's config to.
-const index = doc.contents.items.findLastIndex(
-  (item, i) =>
-    isMap(item) &&
-    doc.getIn([i, 'id']) === ENTRY_ID &&
-    !item.has('insert') &&
-    (!item.has('name') || doc.getIn([i, 'name']) === ENTRY_NAME),
-)
+// The row dsh's config editor writes an entry's config to.
+const configRow = (id, name) =>
+  doc.contents.items.findLastIndex(
+    (item, i) =>
+      isMap(item) &&
+      doc.getIn([i, 'id']) === id &&
+      !item.has('insert') &&
+      (!item.has('name') || doc.getIn([i, 'name']) === name),
+  )
+
+const sessionLogRow = configRow(SESSION_LOG_ID, SESSION_LOG_NAME)
+if (sessionLogRow < 0) {
+  doc.add(
+    doc.createNode({
+      id: SESSION_LOG_ID,
+      name: SESSION_LOG_NAME,
+      config: { enabled: false },
+    }),
+  )
+} else if (!doc.hasIn([sessionLogRow, 'config', 'enabled'])) {
+  doc.setIn([sessionLogRow, 'config', 'enabled'], false)
+}
+
+const index = configRow(ENTRY_ID, ENTRY_NAME)
 
 if (index < 0) {
   if (Object.keys(wanted).length) {
@@ -105,16 +127,16 @@ if (index < 0) {
     console.warn(
       `[startos-providers] ${ENTRY_ID} providers is not a plain mapping; leaving it as it is`,
     )
-    process.exit(0)
-  }
-  for (const pair of providers?.items ?? []) {
-    const name = String(pair.key?.value ?? pair.key)
-    if (name.startsWith(PREFIX) && !(name in wanted)) {
-      doc.deleteIn([index, 'config', 'providers', name])
+  } else {
+    for (const pair of providers?.items ?? []) {
+      const name = String(pair.key?.value ?? pair.key)
+      if (name.startsWith(PREFIX) && !(name in wanted)) {
+        doc.deleteIn([index, 'config', 'providers', name])
+      }
     }
-  }
-  for (const [name, route] of Object.entries(wanted)) {
-    doc.setIn([index, 'config', 'providers', name], doc.createNode(route))
+    for (const [name, route] of Object.entries(wanted)) {
+      doc.setIn([index, 'config', 'providers', name], doc.createNode(route))
+    }
   }
 }
 

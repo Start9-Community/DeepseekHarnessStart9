@@ -88,11 +88,14 @@ providers named "(StartOS)" belong to **Connect Model Servers**: changes you mak
 are undone the next time the service starts. Leave their API key field blank. StartOS supplies the
 key, and a key typed there is removed on the next start.
 
+Session logs are not uploaded to DeepSeek unless you turn on **Upload Session Log when using the
+official model API** in **Settings → General**. The setting only applies to DeepSeek's own API.
+
 ## Limitations
 
-- **Choose the HTTPS address.** The password is checked by StartOS on the encrypted addresses. If you
-  enable the plain `http://` one instead, requests reach the agent without being asked for anything —
-  which on this service means an open shell on your server.
+- **Choose the HTTPS address.** StartOS checks the password on both HTTP and HTTPS addresses, but
+  plain `http://` exposes the password, conversations and workspace traffic to anyone able to
+  observe the connection.
 - **Hosted providers charge per request.** The agent can use a lot of tokens on a single task, so
   keep an eye on your balance with the provider.
 - **Small local models struggle as agents.** The agent leans on tool calling and long context. A small
