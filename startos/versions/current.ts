@@ -1,18 +1,18 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '0.2.2-rc.3:0',
+  version: '0.2.2-rc.5:0',
   releaseNotes: {
     en_US:
-      'Updates DeepSeek Harness to 0.2.2-rc.3. Code review in Git worktrees, named and nested subagents, retry settings for failed model requests, saved API keys shown masked, and an experimental importer for past DeepSeek App or web conversations. Connect Model Servers can now connect Strata. Requires StartOS 0.4.2 or later.',
+      'Updates DeepSeek Harness to 0.2.2-rc.5. Better handling of unexpected model responses. Web search on DeepSeek models now uses DeepSeek server-side search with no per-search charge; other models keep using the DeepSeek Search API. Full release notes: https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.5',
     es_ES:
-      'Actualiza DeepSeek Harness a 0.2.2-rc.3. Revisión de código en worktrees de Git, subagentes con nombre y anidados, ajustes de reintento para solicitudes fallidas al modelo, claves API guardadas mostradas enmascaradas y un importador experimental de conversaciones anteriores de la app o la web de DeepSeek. Conectar servidores de modelos ahora puede conectar Strata. Requiere StartOS 0.4.2 o posterior.',
+      'Actualiza DeepSeek Harness a 0.2.2-rc.5. Mejor manejo de respuestas inesperadas del modelo. La búsqueda web en modelos de DeepSeek ahora usa la búsqueda del lado del servidor de DeepSeek, sin cargo por búsqueda; los demás modelos siguen usando la API de búsqueda de DeepSeek. Notas de versión completas: https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.5',
     de_DE:
-      'Aktualisiert DeepSeek Harness auf 0.2.2-rc.3. Code-Review in Git-Worktrees, benannte und verschachtelte Subagenten, Wiederholungseinstellungen für fehlgeschlagene Modellanfragen, gespeicherte API-Schlüssel werden maskiert angezeigt, und ein experimenteller Import früherer Unterhaltungen aus der DeepSeek-App oder -Web. „Modellserver verbinden“ kann jetzt Strata verbinden. Erfordert StartOS 0.4.2 oder neuer.',
+      'Aktualisiert DeepSeek Harness auf 0.2.2-rc.5. Besserer Umgang mit unerwarteten Modellantworten. Die Websuche bei DeepSeek-Modellen nutzt jetzt die serverseitige Suche von DeepSeek ohne Gebühr pro Suche; andere Modelle verwenden weiterhin die DeepSeek-Such-API. Vollständige Versionshinweise: https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.5',
     pl_PL:
-      'Aktualizuje DeepSeek Harness do wersji 0.2.2-rc.3. Przegląd kodu w worktree Git, nazwane i zagnieżdżone subagenty, ustawienia ponawiania nieudanych żądań do modelu, zapisane klucze API wyświetlane w formie zamaskowanej oraz eksperymentalny import wcześniejszych rozmów z aplikacji lub wersji webowej DeepSeek. Połącz serwery modeli może teraz połączyć Strata. Wymaga StartOS 0.4.2 lub nowszego.',
+      'Aktualizuje DeepSeek Harness do wersji 0.2.2-rc.5. Lepsza obsługa nieoczekiwanych odpowiedzi modelu. Wyszukiwanie w sieci w modelach DeepSeek korzysta teraz z wyszukiwania po stronie serwera DeepSeek, bez opłaty za pojedyncze wyszukiwanie; inne modele nadal korzystają z API wyszukiwania DeepSeek. Pełne informacje o wydaniu: https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.5',
     fr_FR:
-      'Met à jour DeepSeek Harness vers 0.2.2-rc.3. Revue de code dans les worktrees Git, sous-agents nommés et imbriqués, réglages de nouvelle tentative pour les requêtes au modèle qui échouent, clés API enregistrées affichées masquées, et un import expérimental des anciennes conversations de l’app ou du web DeepSeek. Connecter des serveurs de modèles peut désormais connecter Strata. Nécessite StartOS 0.4.2 ou ultérieur.',
+      'Met à jour DeepSeek Harness vers 0.2.2-rc.5. Meilleure gestion des réponses inattendues du modèle. La recherche web sur les modèles DeepSeek utilise désormais la recherche côté serveur de DeepSeek, sans frais par recherche ; les autres modèles continuent d’utiliser l’API de recherche DeepSeek. Notes de version complètes: https://github.com/deepseek-ai/deepseek-harness/releases/tag/dsh-v0.2.2-rc.5',
   },
   migrations: {
     up: async ({ effects }) => {},
